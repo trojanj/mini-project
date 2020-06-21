@@ -10,7 +10,7 @@ import AddPost from 'src/components/AddPost';
 import SharedPostLink from 'src/components/SharedPostLink';
 import { Checkbox, Loader } from 'semantic-ui-react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { loadPosts, loadMorePosts, likePost, toggleExpandedPost, addPost, dislikePost } from './actions';
+import { loadPosts, loadMorePosts, likePost, toggleExpandedPost, addPost, dislikePost, editPost } from './actions';
 
 import styles from './styles.module.scss';
 
@@ -28,12 +28,14 @@ const Thread = ({
   expandedPost,
   hasMorePosts,
   addPost: createPost,
+  editPost: modifyPost,
   likePost: like,
   dislikePost: dislike,
   toggleExpandedPost: toggle
 }) => {
   const [sharedPostId, setSharedPostId] = useState(undefined);
   const [showOwnPosts, setShowOwnPosts] = useState(false);
+  const [editPostId, setEditPostId] = useState('');
 
   const toggleShowOwnPosts = () => {
     setShowOwnPosts(!showOwnPosts);
@@ -82,10 +84,22 @@ const Thread = ({
             toggleExpandedPost={toggle}
             sharePost={sharePost}
             key={post.id}
+            userId={userId}
+            editPostId={editPostId}
+            setEditPostId={setEditPostId}
+            editPost={modifyPost}
+            uploadImage={uploadImage}
           />
         ))}
       </InfiniteScroll>
-      {expandedPost && <ExpandedPost sharePost={sharePost} />}
+      {expandedPost && (
+        <ExpandedPost
+          sharePost={sharePost}
+          editPostId={editPostId}
+          setEditPostId={setEditPostId}
+          uploadImage={uploadImage}
+        />
+      )}
       {sharedPostId && <SharedPostLink postId={sharedPostId} close={() => setSharedPostId(undefined)} />}
     </div>
   );
@@ -101,7 +115,8 @@ Thread.propTypes = {
   likePost: PropTypes.func.isRequired,
   dislikePost: PropTypes.func.isRequired,
   toggleExpandedPost: PropTypes.func.isRequired,
-  addPost: PropTypes.func.isRequired
+  addPost: PropTypes.func.isRequired,
+  editPost: PropTypes.func.isRequired
 };
 
 Thread.defaultProps = {
@@ -124,6 +139,7 @@ const actions = {
   likePost,
   toggleExpandedPost,
   addPost,
+  editPost,
   dislikePost
 };
 
