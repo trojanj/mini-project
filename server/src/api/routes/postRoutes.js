@@ -16,10 +16,13 @@ router
       return res.send(post);
     })
     .catch(next))
+  .put('/', (req, res, next) => postService.update(req.body)
+    .then(post => res.send(post))
+    .catch(next))
   .put('/react', (req, res, next) => postService.setReaction(req.user.id, req.body)
     .then(reaction => {
       if (reaction.post && (reaction.post.userId !== req.user.id)) {
-        // notify a user if someone (not himself) liked his post
+        // notify a user if someone (not himself) liked or disliked his post
         if (reaction.isLike) {
           req.io.to(reaction.post.userId).emit('like', 'Your post was liked!');
         } else {

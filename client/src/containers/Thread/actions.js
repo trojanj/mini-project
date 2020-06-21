@@ -1,7 +1,7 @@
 import * as postService from 'src/services/postService';
 import * as commentService from 'src/services/commentService';
 import {
-  ADD_POST,
+  ADD_POST, EDIT_POST,
   LOAD_MORE_POSTS,
   SET_ALL_POSTS,
   SET_EXPANDED_POST
@@ -19,6 +19,11 @@ const addMorePostsAction = posts => ({
 
 const addPostAction = post => ({
   type: ADD_POST,
+  post
+});
+
+const editPostAction = post => ({
+  type: EDIT_POST,
   post
 });
 
@@ -50,6 +55,12 @@ export const addPost = post => async dispatch => {
   const { id } = await postService.addPost(post);
   const newPost = await postService.getPost(id);
   dispatch(addPostAction(newPost));
+};
+
+export const editPost = post => async dispatch => {
+  const { id } = await postService.editPost(post);
+  const updatedPost = await postService.getPost(id);
+  dispatch(editPostAction(updatedPost));
 };
 
 export const toggleExpandedPost = postId => async dispatch => {
