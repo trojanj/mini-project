@@ -2,7 +2,7 @@ import {
   SET_ALL_POSTS,
   LOAD_MORE_POSTS,
   ADD_POST,
-  SET_EXPANDED_POST
+  SET_EXPANDED_POST, EDIT_POST
 } from './actionTypes';
 
 export default (state = {}, action) => {
@@ -23,6 +23,11 @@ export default (state = {}, action) => {
       return {
         ...state,
         posts: [action.post, ...state.posts]
+      };
+    case EDIT_POST:
+      return {
+        ...state,
+        posts: [action.post, ...state.posts.filter(post => post.id !== action.post.id)]
       };
     case SET_EXPANDED_POST:
       return {
